@@ -21,6 +21,12 @@ app.get('/about', (req, res) => {
   res.render('about', { infoText: info });
 });
 
+// Contact Route
+app.get('/contact', (req, res) => {
+  const info = "This is using the contact page using ejs!";
+  res.render('about', { infoText: info });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
