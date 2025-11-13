@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 // About Route
 app.get('/about', (req, res) => {
-  const info = "This app is built with Node.js & Express.js using EJS templates!";
+  const info = "About page after installing the nodemon!";
   res.render('about', { infoText: info });
 });
 
@@ -26,6 +26,19 @@ app.get('/contact', (req, res) => {
   const info = "This is using the contact page using ejs!";
   res.render('about', { infoText: info });
 });
+
+// Contact Route
+app.get('/privacy', (req, res) => {
+  const info = "This Privacy page using ejs!";
+  res.render('about', { infoText: info });
+});
+
+app.get('/api', (req, res) => {
+  const info = "This Privacy page using ejs!";
+  res.render('about', { infoText: info });
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
