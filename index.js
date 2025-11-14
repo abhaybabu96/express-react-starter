@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const cors = require("cors");
+
 const PORT = process.env.PORT || 3000;
 
 
@@ -8,6 +10,9 @@ require('dotenv').config();
 
 // Set EJS as the template engine
 app.set('view engine', 'ejs');
+
+// app use cors middleware
+app.use(cors());
 
 // Home route
 app.use(express.static('public'));
