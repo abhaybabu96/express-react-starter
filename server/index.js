@@ -12,6 +12,7 @@
 const express = require('express');
 const axios = require('axios');
 const router = express.Router();
+//const collectionsRouter = require('./routes/collections')
 
 // Shopify products API
 router.get('/api/products', async (req, res) => {
@@ -30,7 +31,7 @@ router.get('/api/products', async (req, res) => {
   }
 });
 
-router.get('/api/collectinos', async (req, res) => {
+router.get('/api/collections', async (req, res) => {
   try {
     const {env :{SHOPIFY_STORE, SHOPIFY_ADMIN_TOKEN}} = process
     const response = await axios.get(SHOPIFY_STORE+'/custom_collections.json', {
@@ -45,5 +46,46 @@ router.get('/api/collectinos', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 });
+
+router.get('/api/collection/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { env: { SHOPIFY_STORE, SHOPIFY_ADMIN_TOKEN } } = process;
+    const response = await axios.get(SHOPIFY_STORE + `/products.json?collection_id=${id}`,{
+        headers: {
+          'X-Shopify-Access-Token': SHOPIFY_ADMIN_TOKEN,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    res.json(response.data);
+
+  } catch (error) {
+    console.error('Error fetching collection products:', error.message);
+    res.status(500).json({ error: 'Failed to fetch collection products' });
+  }
+});
+
+router.get('/api/productdetails/:pid', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { env: { SHOPIFY_STORE, SHOPIFY_ADMIN_TOKEN } } = process;
+    const response = await axios.get(SHOPIFY_STORE + `/products.json?collection_id=${id}`,{
+        headers: {
+          'X-Shopify-Access-Token': SHOPIFY_ADMIN_TOKEN,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    res.json(response.data);
+
+  } catch (error) {
+    console.error('Error fetching collection products:', error.message);
+    res.status(500).json({ error: 'Failed to fetch collection products' });
+  }
+});
+
 
 module.exports = router;

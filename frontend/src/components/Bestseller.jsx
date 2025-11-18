@@ -1,6 +1,7 @@
 import Slider from "react-slick";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 
 export default function Bestseller() {
 
@@ -18,7 +19,7 @@ const settings = {
   const [collections, setCollections] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/collectinos")
+    axios.get("http://localhost:3000/api/collections")
       .then(res => setCollections(res.data.custom_collections))
       .catch(err => console.log(err));
   }, []);
@@ -40,18 +41,18 @@ const settings = {
         <p>Loading...</p>
       ) : (
       <Slider {...settings} className="flex justify-center">
-        {collections.map((p) => (
+        {collections.map((col) => (
         // <Slider {...settings}>
-          <div className="p-5" key={p.id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "8px" }}>
-            <a href={`/collections/${p.handle}`}>
+          <div className="p-5" key={col.id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "8px" }}>
+            <Link to={`/collection/${col.id}?name=${encodeURIComponent(col.title)}`}>
             <img
-              src={p.image?.src}
-              alt={p.title}
+              src={col.image?.src}
+              alt={col.title}
               style={{ width: "100%", borderRadius: "8px" }}
             />
-            </a>
-              <h3 className="text-center pt-4 bold uppercase">{p.title}</h3>
-            {/*<p>₹{p.variants[0].price}</p> */}
+            </Link>
+              <h3 className="text-center pt-4 bold uppercase">{col.title}</h3>
+            {/*<p>₹{col.variants[0].price}</p> */}
           </div>
         // </Slider>
         ))}

@@ -4,7 +4,7 @@ export default function Hero() {
         <img 
           src="https://cdn.shopify.com/s/files/1/0734/2525/6670/files/tt-banner_desktop.jpg?v=1763117939"
           alt="Hero"
-          className="w-full h-[80vh] object-cover opacity-60"
+          className="w-full h-[80vh] object-cover opacity-80"
         />
   
         <div className="absolute inset-0 bg-opacity-40 flex flex-col justify-center items-center text-center text-black px-4">

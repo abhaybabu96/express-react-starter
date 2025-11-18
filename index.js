@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 
 const PORT = process.env.PORT || 3000;
+const morgan = require("morgan")
 
 
 // Load environment variables
@@ -13,7 +14,7 @@ app.set('view engine', 'ejs');
 
 // app use cors middleware
 app.use(cors());
-
+app.use(morgan('dev'));
 // Home route
 app.use(express.static('public'));
 

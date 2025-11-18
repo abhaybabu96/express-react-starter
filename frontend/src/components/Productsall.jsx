@@ -26,7 +26,7 @@ export default function Bestseller() {
       {products.length === 0 ? (
         <p>Loading...</p>
       ) : (
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "20px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "20px" }}>
           {products.map((p) => (
             <div key={p.id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "8px" }}>
               <img
@@ -34,8 +34,8 @@ export default function Bestseller() {
                 alt={p.title}
                 style={{ width: "100%", borderRadius: "8px" }}
               />
-              <h3>{p.title}</h3>
-              <p>₹{p.variants[0].price}</p>
+             <h3 className="text-center pt-4 bold uppercase">{p.title}</h3>
+             <p className="text-center bold uppercase bold">₹{p.variants[0].price}</p>
             </div>
           ))}
         </div>
