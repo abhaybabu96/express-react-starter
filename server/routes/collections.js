@@ -1,7 +1,7 @@
-const express = require("express");
-const router = express.Router();
-const { getCollectionById } = require("../controllers/collectionsController");
+// const express = require("express");
+// const router = express.Router();
+// const { getCollectionById } = require("../controllers/collectionsController");
 
-router.get("/:id", getCollectionById);
+// router.get("/:id", getCollectionById);
 
-module.exports = router;
+// module.exports = router;

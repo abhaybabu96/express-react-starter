@@ -17,6 +17,7 @@ import ProductsAll from "./pages/ProductsAll";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ColectionProducts from "./components/CollectionProducts";
+import Productdetail from "./components/Productdetail";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<ProductsAll />} />
         <Route path="/collection/:id" element={<ColectionProducts />} />
+        <Route path="/product/:pid" element={<Productdetail />} />
       </Routes>
       <Footer />
     </div>

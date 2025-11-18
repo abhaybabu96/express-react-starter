@@ -67,11 +67,11 @@ router.get('/api/collection/:id', async (req, res) => {
   }
 });
 
-router.get('/api/productdetails/:pid', async (req, res) => {
+router.get('/api/product/:pid', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { pid } = req.params;
     const { env: { SHOPIFY_STORE, SHOPIFY_ADMIN_TOKEN } } = process;
-    const response = await axios.get(SHOPIFY_STORE + `/products.json?collection_id=${id}`,{
+    const response = await axios.get(SHOPIFY_STORE + `/products/${pid}.json`,{
         headers: {
           'X-Shopify-Access-Token': SHOPIFY_ADMIN_TOKEN,
           'Content-Type': 'application/json',
