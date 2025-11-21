@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Slider from "react-slick";
@@ -6,6 +7,7 @@ import { useParams } from "react-router-dom";
 export default function ProductDetails() {
   const { pid } = useParams();
   const [product, setProduct] = useState(null);
+  const [cartId, setCartId] = useState(null);
 
   // Slick slider refs
   const mainSlider = useRef(null);
@@ -18,7 +20,35 @@ export default function ProductDetails() {
     //console.log('Maincurrent',mainSlider.current);
     setNav2(thumbSlider.current);
     //console.log('thumbSlider',thumbSlider.current);
+
+    async function setupCart() {
+      let storedCartId = localStorage.getItem("cartId");
+      if (!storedCartId) {
+        try {
+          const res = await axios.post("http://localhost:3000/api/cart/create");
+          storedCartId = res.data.data.cartCreate.cart.id;
+          localStorage.setItem("cartId", storedCartId);
+        } catch (err) {
+          console.error("Error creating cart:", err);
+        }
+      }
+      setCartId(storedCartId);
+    }
+    setupCart();
+
   }, []);
+
+  // click funcation
+  const addToCart = async () => {
+    const cartId = localStorage.getItem("cartId");
+    const response = await axios.post("http://localhost:3000/api/cart/add", {
+      cartId,
+      variantId: product.variants[0].id,
+      quantity: 1,
+    });
+  
+    console.log("Cart Updated:", response.data);
+  };
 
   // Slick settings
   const mainSettings = {
@@ -42,6 +72,7 @@ export default function ProductDetails() {
     arrows: false,
     infinite: true
   };
+  
 
   useEffect(() => {
     axios
@@ -51,8 +82,7 @@ export default function ProductDetails() {
       })
       .catch((err) => console.log(err));
   }, [pid]);
-
-
+    
   // click events
   const AddtoCart = (id) => {
     fetch('https://test-truly-beauty.myshopify.com/cart/add.js', {
@@ -113,7 +143,7 @@ export default function ProductDetails() {
             {product.body_html.replace(/<[^>]+>/g, "")}
           </p>
           
-          <button className="px-6 py-3 bg-black text-white rounded-md w-full cursor-pointer" onClick={() => AddtoCart(product.variants[0].id)}>
+          <button className="px-6 py-3 bg-black text-white rounded-md w-full cursor-pointer" onClick={() => addToCart(product.variants[0].id)}>
             Add to Cart
           </button>
         </div>

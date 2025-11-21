@@ -1,7 +1,7 @@
 // server/routes/cartRoutes.js
 const express = require("express");
 const router = express.Router();
-const { createCart } = require("../controllers/cartController");
+const { createCart } = require("../cart/cartService");
 
 router.post("/create", createCart);
 

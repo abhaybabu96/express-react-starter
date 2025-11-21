@@ -101,9 +101,7 @@ router.get("/api/product/:pid", async (req, res) => {
 
 router.post("/api/cart/create", async (req, res) => {
   try {
-    const {
-      env: {SHOPIFY_ADMIN_TOKEN},
-    } = process;
+    const { SHOPIFY_STORE_DOMAIN,SHOPIFY_STOREFRONT_TOKEN } = process.env;
     const query = `
       mutation cartCreate {
         cartCreate {
@@ -119,25 +117,99 @@ router.post("/api/cart/create", async (req, res) => {
         }
       }
     `;
-    const response = await axios.post(
-      `https://test-truly-beauty.myshopify.com/api/2025-10/graphql.json`,
+
+    const response = await axios.post( `${SHOPIFY_STORE_DOMAIN}/api/2025-10/graphql.json`,
       { query },
       {
         headers: {
-          "X-Shopify-Access-Token": SHOPIFY_ADMIN_TOKEN,
+          "X-Shopify-Storefront-Access-Token": SHOPIFY_STOREFRONT_TOKEN,
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      }
+    );
+
+    console.log("GraphQL Response:", response.data);
+    res.json(response.data);
+
+  } catch (err) {
+    console.log("Error:", err.response?.data || err.message);
+    res.status(500).json({ error: err.response?.data || err.message });
+  }
+});
+
+
+router.post("/api/cart/add", async (req, res) => {
+  try {
+    const { cartId, variantId, quantity } = req.body;
+
+    const query = `
+      mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+        cartLinesAdd(cartId: $cartId, lines: $lines) {
+          cart {
+            id
+            checkoutUrl
+            totalQuantity
+            lines(first: 10) {
+              edges {
+                node {
+                  id
+                  quantity
+                  merchandise {
+                    ... on ProductVariant {
+                      id
+                      title
+                      image {
+                        url
+                      }
+                      price {
+                        amount
+                        currencyCode
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `;
+
+    const variables = {
+      cartId,
+      lines: [
+        {
+          merchandiseId: variantId,
+          quantity: quantity
+        }
+      ]
+    };
+
+    const response = await axios.post(
+      `https://test-truly-beauty.myshopify.com/api/2025-01/graphql.json`,
+      {
+        query,
+        variables,
+      },
+      {
+        headers: {
+          "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_TOKEN,
           "Content-Type": "application/json",
         },
       }
     );
+
     res.json(response.data);
-    console.log('Response Data',response.data);
-  } catch (err) {
-    // Normalize error to surface GraphQL errors or network errors clearly
-    const shopifyErr = err.response?.data || err.message;
-    throw new Error(
-      typeof shopifyErr === "string" ? shopifyErr : JSON.stringify(shopifyErr)
-    );
+  } catch (error) {
+    console.error("Cart Add Error:", error.response?.data || error.message);
+    res.status(500).json({ error: "Failed to add item to cart" });
   }
 });
+
 
 module.exports = router;
