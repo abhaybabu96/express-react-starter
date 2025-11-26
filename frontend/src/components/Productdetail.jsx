@@ -43,12 +43,12 @@ export default function ProductDetails() {
     const cartId = localStorage.getItem("cartId");
     const response = await axios.post("http://localhost:3000/api/cart/add", {
       cartId,
-      variantId: product.variants[0].id,
+      variantId: product.variants[0].id,  
       quantity: 1,
     });
   
     console.log("Cart Updated:", response.data);
-  };
+  }
 
   // Slick settings
   const mainSettings = {
@@ -143,7 +143,7 @@ export default function ProductDetails() {
             {product.body_html.replace(/<[^>]+>/g, "")}
           </p>
           
-          <button className="px-6 py-3 bg-black text-white rounded-md w-full cursor-pointer" onClick={() => addToCart(product.variants[0].id)}>
+          <button id={product.variants[0].id} className="px-6 py-3 bg-black text-white rounded-md w-full cursor-pointer" onClick={() => addToCart(product.variants[0].id)}>
             Add to Cart
           </button>
         </div>

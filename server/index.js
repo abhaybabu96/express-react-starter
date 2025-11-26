@@ -143,6 +143,10 @@ router.post("/api/cart/add", async (req, res) => {
   try {
     const { cartId, variantId, quantity } = req.body;
 
+    if (!cartId || !variantId || !quantity) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
     const query = `
       mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
         cartLinesAdd(cartId: $cartId, lines: $lines) {
@@ -150,27 +154,6 @@ router.post("/api/cart/add", async (req, res) => {
             id
             checkoutUrl
             totalQuantity
-            lines(first: 10) {
-              edges {
-                node {
-                  id
-                  quantity
-                  merchandise {
-                    ... on ProductVariant {
-                      id
-                      title
-                      image {
-                        url
-                      }
-                      price {
-                        amount
-                        currencyCode
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
           userErrors {
             field
@@ -185,13 +168,13 @@ router.post("/api/cart/add", async (req, res) => {
       lines: [
         {
           merchandiseId: variantId,
-          quantity: quantity
+          quantity: Number(quantity)
         }
       ]
     };
 
     const response = await axios.post(
-      `https://test-truly-beauty.myshopify.com/api/2025-01/graphql.json`,
+      "https://test-truly-beauty.myshopify.com/api/2025-01/graphql.json",
       {
         query,
         variables,
@@ -210,6 +193,7 @@ router.post("/api/cart/add", async (req, res) => {
     res.status(500).json({ error: "Failed to add item to cart" });
   }
 });
+
 
 
 module.exports = router;
