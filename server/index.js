@@ -140,20 +140,23 @@ router.post("/api/cart/create", async (req, res) => {
 
 
 router.post("/api/cart/add", async (req, res) => {
+  const { cartId, variantId, quantity } = req.body;
+
   try {
-    const { cartId, variantId, quantity } = req.body;
-
-    if (!cartId || !variantId || !quantity) {
-      return res.status(400).json({ error: "Missing required fields" });
-    }
-
     const query = `
-      mutation cartLinesAdd($cartId: ID!, $lines: [CartLineInput!]!) {
+      mutation AddToCart($cartId: ID!, $lines: [CartLineInput!]!) {
         cartLinesAdd(cartId: $cartId, lines: $lines) {
           cart {
             id
-            checkoutUrl
             totalQuantity
+            lines(first: 10) {
+              edges {
+                node {
+                  id
+                  quantity
+                }
+              }
+            }
           }
           userErrors {
             field
@@ -167,7 +170,7 @@ router.post("/api/cart/add", async (req, res) => {
       cartId,
       lines: [
         {
-          merchandiseId: variantId,
+          merchandiseId: `gid://shopify/ProductVariant/${Number(variantId)}`,
           quantity: Number(quantity)
         }
       ]
@@ -190,9 +193,11 @@ router.post("/api/cart/add", async (req, res) => {
     res.json(response.data);
   } catch (error) {
     console.error("Cart Add Error:", error.response?.data || error.message);
-    res.status(500).json({ error: "Failed to add item to cart" });
+    res.status(500).json({ error: "Unable to add to cart" });
   }
 });
+
+
 
 
 

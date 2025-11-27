@@ -46,9 +46,10 @@ export default function ProductDetails() {
       variantId: product.variants[0].id,  
       quantity: 1,
     });
-  
+
     console.log("Cart Updated:", response.data);
-  }
+  };
+
 
   // Slick settings
   const mainSettings = {
@@ -83,19 +84,6 @@ export default function ProductDetails() {
       .catch((err) => console.log(err));
   }, [pid]);
     
-  // click events
-  const AddtoCart = (id) => {
-    fetch('https://test-truly-beauty.myshopify.com/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        id: `${id}`, // your actual VARIANT ID
-        quantity: 1
-      })
-    }).then(r => r.json()).then(console.log)
-    
-    alert(`Product Variant ID: ${id}`);
-  };
 
   if (!product) return <p>Loading product...</p>;
   return (
@@ -143,7 +131,7 @@ export default function ProductDetails() {
             {product.body_html.replace(/<[^>]+>/g, "")}
           </p>
           
-          <button id={product.variants[0].id} className="px-6 py-3 bg-black text-white rounded-md w-full cursor-pointer" onClick={() => addToCart(product.variants[0].id)}>
+          <button id={product.variants[0].id} className="px-6 py-3 bg-black text-white rounded-md w-full cursor-pointer" onClick={addToCart}>
             Add to Cart
           </button>
         </div>

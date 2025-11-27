@@ -14,7 +14,12 @@ app.set('view engine', 'ejs');
 
 // app use cors middleware
 app.use(cors());
+
+// MUST BE HERE
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+
 // Home route
 app.use(express.static('public'));
 
