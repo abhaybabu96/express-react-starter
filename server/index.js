@@ -138,7 +138,6 @@ router.post("/api/cart/create", async (req, res) => {
   }
 });
 
-
 router.post("/api/cart/add", async (req, res) => {
   const { cartId, variantId, quantity } = req.body;
 
@@ -194,6 +193,61 @@ router.post("/api/cart/add", async (req, res) => {
   } catch (error) {
     console.error("Cart Add Error:", error.response?.data || error.message);
     res.status(500).json({ error: "Unable to add to cart" });
+  }
+});
+
+router.get("/api/cart", async (req, res) => {
+  const cartId = "gid://shopify/Cart/hWN5eN6kRI4EHTTzspju8IM8?key=fd889268aa043f01ce700eb95eaf6c60";
+  //console.log("cartId",cartId);
+  if (!cartId)
+    return res.status(400).json({ error: "cartId missing" });
+
+  const query = `
+    query GetCart($cartId: ID!) {
+      cart(id: $cartId) {
+        id
+        totalQuantity
+        lines(first: 10) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  price {
+                    amount
+                  }
+                  product {
+                    title
+                    featuredImage {
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await axios.post("https://test-truly-beauty.myshopify.com/api/2025-01/graphql.json",
+      { 
+        query, variables: { cartId } 
+      },
+      { headers: {
+        "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_TOKEN,
+        "Content-Type": "application/json",
+      }, }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Cart fetch failed" });
   }
 });
 
