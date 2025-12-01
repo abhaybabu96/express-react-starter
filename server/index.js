@@ -207,7 +207,7 @@ router.get("/api/cart", async (req, res) => {
       cart(id: $cartId) {
         id
         totalQuantity
-        lines(first: 10) {
+        lines(first: 20) {
           edges {
             node {
               id

@@ -23,13 +23,18 @@ export default function CartPage() {
 
   return (
     <div className="p-5">
-      <h1 className="text-xl font-bold mb-4">Your Cart</h1>
+      <h1 className="text-6xl font-bold mb-4 text-center">Your Cart</h1>
 
       {cart.lines.edges.map((item) => {
         const node = item.node;
 
         return (
           <div key={node.id} className="border p-4 mb-3 rounded-lg">
+            <img
+              className="w-24 h-24 object-cover rounded-md"
+              src={node.merchandise.product.featuredImage.url}
+              alt={node.merchandise.product.featuredImage.alt}
+            />
             <h2 className="font-semibold">{node.merchandise.product.title}</h2>
             <p>Variant: {node.merchandise.title}</p>
             <p>Quantity: {node.quantity}</p>
