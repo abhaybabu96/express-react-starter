@@ -176,7 +176,7 @@ router.post("/api/cart/add", async (req, res) => {
     };
 
     const response = await axios.post(
-      "https://test-truly-beauty.myshopify.com/api/2025-01/graphql.json",
+      `${SHOPIFY_STORE_DOMAIN}/api/2025-10/graphql.json`,
       {
         query,
         variables,
@@ -197,7 +197,7 @@ router.post("/api/cart/add", async (req, res) => {
 });
 
 router.get("/api/cart", async (req, res) => {
-  const cartId = "gid://shopify/Cart/hWN5eN6kRI4EHTTzspju8IM8?key=fd889268aa043f01ce700eb95eaf6c60";
+  const cartId = req.query.cartId;
   //console.log("cartId",cartId);
   if (!cartId)
     return res.status(400).json({ error: "cartId missing" });
@@ -206,7 +206,26 @@ router.get("/api/cart", async (req, res) => {
     query GetCart($cartId: ID!) {
       cart(id: $cartId) {
         id
+        checkoutUrl
         totalQuantity
+         estimatedCost {
+          subtotalAmount{
+           amount
+           currencyCode
+          }
+          totalAmount{
+           amount
+           currencyCode
+          }
+          totalDutyAmount{
+           amount
+           currencyCode
+          }
+          totalTaxAmount{
+           amount
+           currencyCode
+          } 
+         }
         lines(first: 20) {
           edges {
             node {
@@ -235,7 +254,7 @@ router.get("/api/cart", async (req, res) => {
   `;
 
   try {
-    const response = await axios.post("https://test-truly-beauty.myshopify.com/api/2025-01/graphql.json",
+    const response = await axios.post(`${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-10/graphql.json`,
       { 
         query, variables: { cartId } 
       },
@@ -250,9 +269,5 @@ router.get("/api/cart", async (req, res) => {
     res.status(500).json({ error: "Cart fetch failed" });
   }
 });
-
-
-
-
 
 module.exports = router;

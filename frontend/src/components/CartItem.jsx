@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from 'react-router-dom';
 
 export default function CartPage() {
   const [cart, setCart] = useState(null);
@@ -9,11 +10,10 @@ export default function CartPage() {
     if (!cartId) return;
 
     axios
-      .get("http://localhost:3000/api/cart", {
-        params: { cartId }
-      })
+      .get(`http://localhost:3000/api/cart?cartId=${cartId}`)
       .then((res) => {
         const cartData = res.data.data.cart;
+        console.log("cartData",cartData);
         setCart(cartData);
       })
       .catch((err) => console.log(err));
@@ -25,7 +25,7 @@ export default function CartPage() {
     <div className="p-5">
       <h1 className="text-6xl font-bold mb-4 text-center">Your Cart</h1>
 
-      {cart.lines.edges.map((item) => {
+      {cart?.lines?.edges?.map((item) => {
         const node = item.node;
 
         return (
@@ -46,6 +46,12 @@ export default function CartPage() {
       <h2 className="text-lg font-bold mt-4">
         Total Quantity: {cart.totalQuantity}
       </h2>
+      <h2 className="text-lg font-bold mt-4">
+        Subtotal: {cart.estimatedCost.totalAmount.amount}
+      </h2>
+      <button class="px-6 py-3 bg-black text-white rounded-md cursor-pointer">
+       <Link to={cart.checkoutUrl}>Checkout</Link>
+      </button>
     </div>
   );
 }
