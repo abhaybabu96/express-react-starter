@@ -238,6 +238,9 @@ router.get("/api/cart", async (req, res) => {
                   price {
                     amount
                   }
+                  compareAtPriceV2{
+                    amount
+                  } 
                   product {
                     title
                     featuredImage {
