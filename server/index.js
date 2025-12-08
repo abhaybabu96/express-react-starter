@@ -176,7 +176,7 @@ router.post("/api/cart/add", async (req, res) => {
     };
 
     const response = await axios.post(
-      `${SHOPIFY_STORE_DOMAIN}/api/2025-10/graphql.json`,
+      `${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-10/graphql.json`,
       {
         query,
         variables,

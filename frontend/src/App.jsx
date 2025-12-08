@@ -1,15 +1,3 @@
-// // import React from 'react'
-// import Home from "./pages/Home";
-
-// function App() {
-//   return (
-//     <>
-//       <Home />
-//     </>
-//   );
-// }
-
-// export default App;
 
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -19,12 +7,14 @@ import Footer from "./components/Footer";
 import ColectionProducts from "./components/CollectionProducts";
 import Productdetail from "./components/Productdetail";
 import CartItem from "./components/CartItem";
+import SideCart from "./components/SideCart"
 
 
 function App() {
   return (
     <div>
       <Header />
+      <SideCart />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/products" element={<ProductsAll />} />

@@ -48,6 +48,9 @@ export default function ProductDetails() {
     });
 
     console.log("Cart Updated:", response.data);
+    //alert("Product Added into the cart");
+    // open side cart
+    window.dispatchEvent(new Event("open-side-cart"));
   };
 
 

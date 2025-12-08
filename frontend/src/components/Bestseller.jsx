@@ -43,12 +43,13 @@ const settings = {
       <Slider {...settings} className="flex justify-center">
         {collections.map((col) => (
         // <Slider {...settings}>
-          <div className="p-5" key={col.id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "8px" }}>
+          <div className="p-5 overflow-hidden" key={col.id} style={{ border: "1px solid #ddd", padding: "10px", borderRadius: "8px" }}>
             <Link to={`/collection/${col.id}?name=${encodeURIComponent(col.title)}`}>
             <img
               src={col.image?.src}
               alt={col.title}
               style={{ width: "100%", borderRadius: "8px" }}
+              className="transform transition-transform duration-500 hover:scale-105"
             />
             </Link>
               <h3 className="text-center pt-4 bold uppercase">{col.title}</h3>

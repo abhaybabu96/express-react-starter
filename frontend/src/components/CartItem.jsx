@@ -115,7 +115,7 @@ export default function CartPage() {
           </div>
 
           <button className="w-full bg-pink-600 text-white font-medium py-3 rounded mt-6">
-            <Link to={"https://test-truly-beauty.myshopify.com/cart/c/hWN5eN6kRI4EHTTzspju8IM8?key=fd889268aa043f01ce700eb95eaf6c60"}>CONTINUE TO CHECKOUT</Link> 
+            <Link to={cart.checkoutUrl}>CONTINUE TO CHECKOUT</Link> 
           </button>
         </div>
       </div>
