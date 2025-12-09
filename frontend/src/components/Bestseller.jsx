@@ -19,7 +19,7 @@ const settings = {
   const [collections, setCollections] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/collections")
+    axios.get("https://express-react-starter-052y.onrender.com/api/collections")
       .then(res => setCollections(res.data.custom_collections))
       .catch(err => console.log(err));
   }, []);
