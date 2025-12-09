@@ -46,6 +46,44 @@ export default function SideCart() {
           <h2 className="text-lg font-semibold">Your Cart</h2>
           <button onClick={() => setOpen(false)}>X</button>
         </div>
+        <div className="h-150 overflow-y-auto">
+        {cart?.lines?.edges?.map((item) => {
+            const node = item.node;
+            return (
+              <div key={node.id} className="flex border-b pb-2 pt-4 px-2 py-2 gap-4">
+                <img
+                  src={node.merchandise.product.featuredImage.url}
+                  alt={node.merchandise.product.title}
+                  className="w-18 h-20 object-cover rounded"
+                />
+                <div className="flex-1">
+                  <h2 className="font-medium text-sm">
+                  {node.merchandise.product.title}
+                  </h2>
+                  {/* Quantity */}
+                  <div className="flex items-center mt-2 items-center justify-between">
+                  <div className="flex items-center gap-1 mt-1">
+                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer">-</button>
+                    <span>{node.quantity}</span>
+                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer">+</button>
+                  </div>
+                    <button className="mt-1 text-sm text-gray-400 hover:text-black flex items-center gap-1 cursor-pointer">
+                    <MdDelete /> Remove
+                  </button>
+                  </div>
+                  
+                  {/* Price */}
+                  <div className="mt-2 flex items-center gap-3">
+                    <p className="text-pink-600 font-semibold">₹{node.merchandise.price.amount}</p>
+                    <p className="line-through text-gray-500">₹{node.merchandise.compareAtPriceV2?.amount}</p>
+                  </div>
+
+                
+                </div>
+              </div>
+            );
+          })}
+        </div> 
         {/* the details is here */}
         <div className="mt-6 space-y-3 text-sm p-3">
             <div className="flex justify-between">
@@ -62,7 +100,7 @@ export default function SideCart() {
             </div>
           </div>
 
-          <button className="w-full bg-pink-600 text-white font-medium py-3 rounded mt-6 mr-4 ml-4">
+          <button className="bg-pink-600 text-white font-medium py-3 px-10 rounded m-4">
             <Link to={"https://test-truly-beauty.myshopify.com/cart/c/hWN5eN6kRI4EHTTzspju8IM8?key=fd889268aa043f01ce700eb95eaf6c60"}>CONTINUE TO CHECKOUT</Link> 
           </button>
       </div>

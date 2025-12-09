@@ -9,7 +9,7 @@ export default function Hero() {
   
         <div className="absolute inset-0 bg-opacity-40 flex flex-col justify-center items-center text-center text-black px-4">
           <h2 className="text-4xl md:text-6xl font-bold mb-4">
-            We Cares Your Beauty
+            Create Your Own Custom Cakes
           </h2>
           <p className="text-lg md:text-xl mb-6">
             Your Skin Will Love What We Have

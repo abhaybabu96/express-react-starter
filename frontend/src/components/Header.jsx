@@ -3,6 +3,12 @@
 import { Link } from "react-router-dom";
 import { FaShoppingCart } from 'react-icons/fa';
 
+
+const opensidecart = async () => {
+  // open side cart
+  window.dispatchEvent(new Event("open-side-cart"));
+};
+
 export default function Header() {
     return (
       <header className="bg-white shadow-md sticky top-0 z-50">
@@ -14,7 +20,7 @@ export default function Header() {
             <Link to="/products" className="text-black-700 hover:text-indigo-600">All Products</Link>
             <Link to="/about" className="text-black-700 hover:text-indigo-600">About</Link>
             <Link to="/contact" className="text-black-700 hover:text-indigo-600">Contact</Link>
-            <Link to="/cart" className="text-black-700 hover:text-pink-600"><FaShoppingCart className="h-6 w-6 inline" /></Link>
+            <button  className="text-black-700 hover:text-pink-600" onClick={opensidecart}><FaShoppingCart className="h-6 w-6 inline" /></button>
           </nav>
         </div>
       </header>
