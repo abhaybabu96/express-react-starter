@@ -273,4 +273,81 @@ router.get("/api/cart", async (req, res) => {
   }
 });
 
+router.get("/api/cartupdate", async (req, res) => {
+  const cartId = req.query.cartId;
+  //console.log("cartId",cartId);
+  if (!cartId)
+    return res.status(400).json({ error: "cartId missing" });
+
+  const query = `
+    mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+      cartLinesUpdate(cartId: $cartId, lines: $lines) {
+        id
+        checkoutUrl
+        totalQuantity
+         estimatedCost {
+          subtotalAmount{
+           amount
+           currencyCode
+          }
+          totalAmount{
+           amount
+           currencyCode
+          }
+          totalDutyAmount{
+           amount
+           currencyCode
+          }
+          totalTaxAmount{
+           amount
+           currencyCode
+          } 
+         }
+        lines(first: 20) {
+          edges {
+            node {
+              id
+              quantity
+              merchandise {
+                ... on ProductVariant {
+                  id
+                  title
+                  price {
+                    amount
+                  }
+                  compareAtPriceV2{
+                    amount
+                  } 
+                  product {
+                    title
+                    featuredImage {
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await axios.post(`${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-10/graphql.json`,
+      { 
+        query, variables: { cartId } 
+      },
+      { headers: {
+        "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_TOKEN,
+        "Content-Type": "application/json",
+      }, }
+    );
+
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: "Cart fetch failed" });
+  }
+});
+
 module.exports = router;
