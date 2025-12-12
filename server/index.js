@@ -273,9 +273,9 @@ router.get("/api/cart", async (req, res) => {
   }
 });
 
-router.get("/api/cartupdate", async (req, res) => {
+router.get("/api/cartupdate", async (req, res) => { 
   const cartId = req.query.cartId;
-  //console.log("cartId",cartId);
+  //  console.log("CartUpdate->",cartId);
   if (!cartId)
     return res.status(400).json({ error: "cartId missing" });
 
