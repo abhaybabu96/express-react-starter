@@ -30,6 +30,31 @@ export default function SideCart() {
     };
   }, []);
 
+  const updateCartLine = async (lineId, newQuantity) => {
+    const cartId = "gid://shopify/Cart/hWN5eN6kRI4EHTTzspju8IM8?key=fd889268aa043f01ce700eb95eaf6c60";
+    if (!cartId) return;
+  
+    // Shopify does not allow quantity < 1
+    if (newQuantity < 1) return;
+  
+    try {
+      const res = await axios.post(`http://localhost:3000/api/cartupdate`, {
+        cartId,
+        lines: [
+          {
+            id: lineId,
+            quantity: newQuantity,
+          },
+        ],
+      });
+  
+      // IMPORTANT: Replace whole cart with updated cart
+      setCart(res.data.data.cartLinesUpdate.cart);
+    } catch (err) {
+      console.error("Cart update failed", err);
+    }
+  };  
+
   return (
     <>
       {open && (
@@ -63,9 +88,9 @@ export default function SideCart() {
                   {/* Quantity */}
                   <div className="flex items-center mt-2 items-center justify-between">
                   <div className="flex items-center gap-1 mt-1">
-                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer">-</button>
+                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer" onClick={() => updateCartLine(node.id, node.quantity - 1) }>-</button>
                     <span>{node.quantity}</span>
-                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer">+</button>
+                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer" onClick={() => updateCartLine(node.id, node.quantity + 1) }>+</button>
                   </div>
                     <button className="mt-1 text-sm text-gray-400 hover:text-black flex items-center gap-1 cursor-pointer">
                     <MdDelete /> Remove
@@ -74,8 +99,8 @@ export default function SideCart() {
                   
                   {/* Price */}
                   <div className="mt-2 flex items-center gap-3">
-                    <p className="text-pink-600 font-semibold">₹{node.merchandise.price.amount}</p>
-                    <p className="line-through text-gray-500">₹{node.merchandise.compareAtPriceV2?.amount}</p>
+                    <p className="text-pink-600 font-semibold">{node.merchandise.price.amount && `₹${node.merchandise.price.amount}`}</p>
+                    <p className="line-through text-gray-500">{node.merchandise.compareAtPriceV2?.amount && `₹${node.merchandise.compareAtPriceV2?.amount}`}</p>
                   </div>
 
                 

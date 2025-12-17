@@ -273,11 +273,11 @@ router.get("/api/cart", async (req, res) => {
   }
 });
 
-router.get("/api/cartupdate", async (req, res) => { 
-  const cartId = req.query.cartId;
+router.post("/api/cartupdate", async (req, res) => { 
+  const { cartId, lines } = req.body;
   //  console.log("CartUpdate->",cartId);
-  if (!cartId)
-    return res.status(400).json({ error: "cartId missing" });
+  if (!cartId || !lines)
+    return res.status(400).json({ error: "Missing data" });
 
   const query = `
     mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
