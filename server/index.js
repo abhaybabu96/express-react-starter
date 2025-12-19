@@ -273,81 +273,92 @@ router.get("/api/cart", async (req, res) => {
   }
 });
 
-router.post("/api/cartupdate", async (req, res) => { 
+router.post("/api/cart/update", async (req, res) => {
   const { cartId, lines } = req.body;
-  //  console.log("CartUpdate->",cartId);
+
   if (!cartId || !lines)
-    return res.status(400).json({ error: "Missing data" });
+    return res.status(400).json({ error: "cartId or lines missing" });
 
   const query = `
     mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
       cartLinesUpdate(cartId: $cartId, lines: $lines) {
-        id
-        checkoutUrl
-        totalQuantity
-         estimatedCost {
-          subtotalAmount{
-           amount
-           currencyCode
-          }
-          totalAmount{
-           amount
-           currencyCode
-          }
-          totalDutyAmount{
-           amount
-           currencyCode
-          }
-          totalTaxAmount{
-           amount
-           currencyCode
-          } 
-         }
-        lines(first: 20) {
-          edges {
-            node {
-              id
-              quantity
-              merchandise {
-                ... on ProductVariant {
-                  id
-                  title
-                  price {
-                    amount
-                  }
-                  compareAtPriceV2{
-                    amount
-                  } 
-                  product {
-                    title
-                    featuredImage {
-                      url
-                    }
-                  }
-                }
-              }
-            }
-          }
+        cart {
+          id
+          totalQuantity
+        }
+        userErrors {
+          field
+          message
         }
       }
     }
   `;
 
   try {
-    const response = await axios.post(`${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-10/graphql.json`,
-      { 
-        query, variables: { cartId } 
+    const response = await axios.post(
+      `${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-01/graphql.json`,
+      {
+        query,
+        variables: { cartId, lines }
       },
-      { headers: {
-        "X-Shopify-Storefront-Access-Token": process.env.SHOPIFY_STOREFRONT_TOKEN,
-        "Content-Type": "application/json",
-      }, }
+      {
+        headers: {
+          "X-Shopify-Storefront-Access-Token":
+            process.env.SHOPIFY_STOREFRONT_TOKEN,
+          "Content-Type": "application/json"
+        }
+      }
     );
 
     res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: "Cart fetch failed" });
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    res.status(500).json({ error: "Cart update failed" });
   }
 });
+
+router.post("/api/cart/remove", async (req, res) => {
+  const { cartId, lines } = req.body;
+
+  if (!cartId || !lines)
+    return res.status(400).json({ error: "cartId or lines missing" });
+
+  const query = `
+    mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
+      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+        cart {
+          id
+        }
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await axios.post(
+      `${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-01/graphql.json`,
+      {
+        query,
+        variables: { cartId, lines }
+      },
+      {
+        headers: {
+          "X-Shopify-Storefront-Access-Token":
+            process.env.SHOPIFY_STOREFRONT_TOKEN,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    res.json(response.data);
+  } catch (err) {
+    console.error(err.response?.data || err.message);
+    res.status(500).json({ error: "Cart update failed" });
+  }
+});
+
 
 module.exports = router;
