@@ -41,6 +41,18 @@ export default function SideCart() {
         }
       ]
     });
+
+    // after update
+    const cartIdSc = localStorage.getItem("cartId");
+    if (!cartIdSc) return;
+    axios
+      .get(`http://localhost:3000/api/cart?cartId=${cartIdSc}`)
+      .then((res) => {
+        const cartData = res.data.data.cart;
+        console.log("cartData", cartData);
+        setCart(cartData);
+    })
+    .catch((err) => console.log(err));
   };
 
   const removeCartline = async (lineId) => {
@@ -127,7 +139,7 @@ export default function SideCart() {
           </div>
 
           <button className="bg-pink-600 text-white font-medium py-3 px-10 rounded m-4">
-            <Link to={"https://test-truly-beauty.myshopify.com/cart/c/hWN5eN6kRI4EHTTzspju8IM8?key=fd889268aa043f01ce700eb95eaf6c60"}>CONTINUE TO CHECKOUT</Link> 
+            <Link to={cart?.checkoutUrl}>CONTINUE TO CHECKOUT</Link> 
           </button>
       </div>
     </>

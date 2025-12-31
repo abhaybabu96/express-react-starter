@@ -318,9 +318,9 @@ router.post("/api/cart/update", async (req, res) => {
 });
 
 router.post("/api/cart/remove", async (req, res) => {
-  const { cartId, lines } = req.body;
+  const { cartId, lineIds } = req.body;
 
-  if (!cartId || !lines)
+  if (!cartId || !lineIds)
     return res.status(400).json({ error: "cartId or lines missing" });
 
   const query = `
