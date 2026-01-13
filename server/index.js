@@ -342,7 +342,7 @@ router.post("/api/cart/remove", async (req, res) => {
       `${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-01/graphql.json`,
       {
         query,
-        variables: { cartId, lines }
+        variables: { cartId, lineIds }
       },
       {
         headers: {
