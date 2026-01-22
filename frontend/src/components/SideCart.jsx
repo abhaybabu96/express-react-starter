@@ -8,7 +8,6 @@ export default function SideCart() {
   const [cart, setCart] = useState(null);
 
   useEffect(() => {
-
     const cartIdSc = localStorage.getItem("cartId");
     if (!cartIdSc) return;
     axios
@@ -17,8 +16,8 @@ export default function SideCart() {
         const cartData = res.data.data.cart;
         console.log("cartData", cartData);
         setCart(cartData);
-    })
-    .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
 
     function openCart() {
       setOpen(true);
@@ -37,9 +36,9 @@ export default function SideCart() {
       lines: [
         {
           id: lineId,
-          quantity: newQty
-        }
-      ]
+          quantity: newQty,
+        },
+      ],
     });
 
     // after update
@@ -51,22 +50,34 @@ export default function SideCart() {
         const cartData = res.data.data.cart;
         console.log("cartData", cartData);
         setCart(cartData);
-    })
-    .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
   };
 
   const removeCartline = async (lineId) => {
     const cartId = localStorage.getItem("cartId");
     await axios.post("http://localhost:3000/api/cart/remove", {
       cartId,
-      lineIds: [
+      lines: [
         {
-          id: lineId
-        }
-      ]
+          id: lineId,
+          quantity: 0,
+        },
+      ],
     });
+
+    // after remove
+    const cartIdSc = localStorage.getItem("cartId");
+    if (!cartIdSc) return;
+    axios
+      .get(`http://localhost:3000/api/cart?cartId=${cartIdSc}`)
+      .then((res) => {
+        const cartData = res.data.data.cart;
+        console.log("cartData", cartData);
+        setCart(cartData);
+      })
+      .catch((err) => console.log(err));
   };
-    
 
   return (
     <>
@@ -85,10 +96,13 @@ export default function SideCart() {
           <button onClick={() => setOpen(false)}>X</button>
         </div>
         <div className="h-150 overflow-y-auto">
-        {cart?.lines?.edges?.map((item) => {
+          {cart?.lines?.edges?.map((item) => {
             const node = item.node;
             return (
-              <div key={node.id} className="flex border-b pb-2 pt-4 px-2 py-2 gap-4">
+              <div
+                key={node.id}
+                className="flex border-b pb-2 pt-4 px-2 py-2 gap-4"
+              >
                 <img
                   src={node.merchandise.product.featuredImage.url}
                   alt={node.merchandise.product.title}
@@ -96,51 +110,74 @@ export default function SideCart() {
                 />
                 <div className="flex-1">
                   <h2 className="font-medium text-sm">
-                  {node.merchandise.product.title}
+                    {node.merchandise.product.title}
                   </h2>
                   {/* Quantity */}
                   <div className="flex items-center mt-2 items-center justify-between">
-                  <div className="flex items-center gap-1 mt-1">
-                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer" onClick={() => updateQuantity(node.id, node.quantity - 1) }>-</button>
-                    <span>{node.quantity}</span>
-                    <button className="border px-1 hover:text-white hover:bg-black cursor-pointer" onClick={() => updateQuantity(node.id, node.quantity + 1) }>+</button>
-                  </div>
-                    <button className="mt-1 text-sm text-gray-400 hover:text-black flex items-center gap-1 cursor-pointer"  onClick={() => removeCartline(node.id) }>
-                    <MdDelete /> Remove
-                  </button>
-                  </div>
-                  
-                  {/* Price */}
-                  <div className="mt-2 flex items-center gap-3">
-                    <p className="text-pink-600 font-semibold">{node.merchandise.price.amount && `₹${node.merchandise.price.amount}`}</p>
-                    <p className="line-through text-gray-500">{node.merchandise.compareAtPriceV2?.amount && `₹${node.merchandise.compareAtPriceV2?.amount}`}</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <button
+                        className="border px-1 hover:text-white hover:bg-black cursor-pointer"
+                        onClick={() =>
+                          updateQuantity(node.id, node.quantity - 1)
+                        }
+                      >
+                        -
+                      </button>
+                      <span>{node.quantity}</span>
+                      <button
+                        className="border px-1 hover:text-white hover:bg-black cursor-pointer"
+                        onClick={() =>
+                          updateQuantity(node.id, node.quantity + 1)
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                    <button
+                      className="mt-1 text-sm text-gray-400 hover:text-black flex items-center gap-1 cursor-pointer"
+                      onClick={() => removeCartline(node.id)}
+                    >
+                      <MdDelete /> Remove
+                    </button>
                   </div>
 
-                
+                  {/* Price */}
+                  <div className="mt-2 flex items-center gap-3">
+                    <p className="text-pink-600 font-semibold">
+                      {node.merchandise.price.amount &&
+                        `₹${node.merchandise.price.amount}`}
+                    </p>
+                    <p className="line-through text-gray-500">
+                      {node.merchandise.compareAtPriceV2?.amount &&
+                        `₹${node.merchandise.compareAtPriceV2?.amount}`}
+                    </p>
+                  </div>
                 </div>
               </div>
             );
           })}
-        </div> 
+        </div>
         {/* the details is here */}
         <div className="mt-6 space-y-3 text-sm p-3">
-            <div className="flex justify-between">
-              <span>Subtotal</span> <span>{cart?.estimatedCost?.totalAmount?.amount}</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Shipping</span> <span>TBD</span>
-            </div>
-            <div className="flex justify-between">
-              <span>Tax</span> <span>TBD</span>
-            </div>
-            <div className="flex justify-between font-semibold pt-2 border-t">
-              <span>Estimated Total:</span> <span>₹{cart?.estimatedCost?.totalAmount?.amount}</span>
-            </div>
+          <div className="flex justify-between">
+            <span>Subtotal</span>{" "}
+            <span>{cart?.estimatedCost?.totalAmount?.amount}</span>
           </div>
+          <div className="flex justify-between">
+            <span>Shipping</span> <span>TBD</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Tax</span> <span>TBD</span>
+          </div>
+          <div className="flex justify-between font-semibold pt-2 border-t">
+            <span>Estimated Total:</span>{" "}
+            <span>₹{cart?.estimatedCost?.totalAmount?.amount}</span>
+          </div>
+        </div>
 
-          <button className="bg-pink-600 text-white font-medium py-3 px-10 rounded m-4">
-            <Link to={cart?.checkoutUrl}>CONTINUE TO CHECKOUT</Link> 
-          </button>
+        <button className="bg-pink-600 text-white font-medium py-3 px-10 rounded m-4">
+          <Link to={cart?.checkoutUrl}>CONTINUE TO CHECKOUT</Link>
+        </button>
       </div>
     </>
   );

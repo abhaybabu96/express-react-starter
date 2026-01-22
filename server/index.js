@@ -318,16 +318,17 @@ router.post("/api/cart/update", async (req, res) => {
 });
 
 router.post("/api/cart/remove", async (req, res) => {
-  const { cartId, lineIds } = req.body;
+  const { cartId, lines } = req.body;
 
-  if (!cartId || !lineIds)
+  if (!cartId || !lines)
     return res.status(400).json({ error: "cartId or lines missing" });
 
   const query = `
-    mutation cartLinesRemove($cartId: ID!, $lineIds: [ID!]!) {
-      cartLinesRemove(cartId: $cartId, lineIds: $lineIds) {
+    mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
+      cartLinesUpdate(cartId: $cartId, lines: $lines) {
         cart {
           id
+          totalQuantity
         }
         userErrors {
           field
@@ -342,7 +343,7 @@ router.post("/api/cart/remove", async (req, res) => {
       `${process.env.SHOPIFY_STORE_DOMAIN}/api/2025-01/graphql.json`,
       {
         query,
-        variables: { cartId, lineIds }
+        variables: { cartId, lines }
       },
       {
         headers: {

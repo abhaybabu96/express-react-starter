@@ -8,6 +8,11 @@ export default function ProductDetails() {
   const { pid } = useParams();
   const [product, setProduct] = useState(null);
   const [cartId, setCartId] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [cart, setCart] = useState(null);
+
+
+
 
   // Slick slider refs
   const mainSlider = useRef(null);
@@ -49,8 +54,20 @@ export default function ProductDetails() {
 
     console.log("Cart Updated:", response.data);
     //alert("Product Added into the cart");
-    // open side cart
-    window.dispatchEvent(new Event("open-side-cart"));
+    // cart update
+      const cartIdSc = localStorage.getItem("cartId");
+      if (!cartIdSc) return;
+      axios
+        .get(`http://localhost:3000/api/cart?cartId=${cartIdSc}`)
+        .then((res) => {
+          const cartData = res.data.data.cart;
+          console.log("cartData product details", cartData);
+          setCart(cartData);
+          // open side cart
+          window.dispatchEvent(new Event("open-side-cart"));
+      })
+      .catch((err) => console.log(err));
+    // cart update code ends
   };
 
 
