@@ -12,7 +12,7 @@ export default function CartPage() {
     if (!cartId) return;
 
     axios
-      .get(`http://localhost:3000/api/cart?cartId=${cartId}`)
+      .get(`https://express-react-starter-052y.onrender.com/api/cart?cartId=${cartId}`)
       .then((res) => {
         const cartData = res.data.data.cart;
         console.log("cartData", cartData);

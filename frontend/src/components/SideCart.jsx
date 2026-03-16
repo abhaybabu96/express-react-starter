@@ -11,10 +11,10 @@ export default function SideCart() {
     const cartIdSc = localStorage.getItem("cartId");
     if (!cartIdSc) return;
     axios
-      .get(`http://localhost:3000/api/cart?cartId=${cartIdSc}`)
+      .get(`https://express-react-starter-052y.onrender.com/api/cart?cartId=${cartIdSc}`)
       .then((res) => {
         const cartData = res.data.data.cart;
-        console.log("cartData", cartData);
+        console.log("cartData Actual", cartData);
         setCart(cartData);
       })
       .catch((err) => console.log(err));
@@ -31,7 +31,7 @@ export default function SideCart() {
 
   const updateQuantity = async (lineId, newQty) => {
     const cartId = localStorage.getItem("cartId");
-    await axios.post("http://localhost:3000/api/cart/update", {
+    await axios.post("https://express-react-starter-052y.onrender.com/api/cart/update", {
       cartId,
       lines: [
         {
@@ -45,7 +45,7 @@ export default function SideCart() {
     const cartIdSc = localStorage.getItem("cartId");
     if (!cartIdSc) return;
     axios
-      .get(`http://localhost:3000/api/cart?cartId=${cartIdSc}`)
+      .get(`https://express-react-starter-052y.onrender.com/api/cart?cartId=${cartIdSc}`)
       .then((res) => {
         const cartData = res.data.data.cart;
         console.log("cartData", cartData);
@@ -56,7 +56,7 @@ export default function SideCart() {
 
   const removeCartline = async (lineId) => {
     const cartId = localStorage.getItem("cartId");
-    await axios.post("http://localhost:3000/api/cart/remove", {
+    await axios.post("https://express-react-starter-052y.onrender.com/api/cart/remove", {
       cartId,
       lines: [
         {
@@ -70,7 +70,7 @@ export default function SideCart() {
     const cartIdSc = localStorage.getItem("cartId");
     if (!cartIdSc) return;
     axios
-      .get(`http://localhost:3000/api/cart?cartId=${cartIdSc}`)
+      .get(`https://express-react-starter-052y.onrender.com/api/cart?cartId=${cartIdSc}`)
       .then((res) => {
         const cartData = res.data.data.cart;
         console.log("cartData", cartData);

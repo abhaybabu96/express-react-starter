@@ -25,7 +25,7 @@ const settings = {
   }, []);
 
   // useEffect(() => {
-  //   fetch("http://localhost:3000/api/products")
+  //   fetch("https://express-react-starter-052y.onrender.com/api/products")
   //     .then((res) => res.json())
   //     .then((data) => {
   //       setProducts(data.products); // your API returns { products: [...] }

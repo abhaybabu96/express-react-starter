@@ -34,7 +34,7 @@ const shopifyRoutes = require('./server/index');
 app.use('/', shopifyRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on https://localhost:${PORT}`);
 });
 
 // // About Route

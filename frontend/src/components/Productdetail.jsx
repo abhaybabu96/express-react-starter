@@ -30,7 +30,7 @@ export default function ProductDetails() {
       let storedCartId = localStorage.getItem("cartId");
       if (!storedCartId) {
         try {
-          const res = await axios.post("http://localhost:3000/api/cart/create");
+          const res = await axios.post("https://express-react-starter-052y.onrender.com/api/cart/create");
           storedCartId = res.data.data.cartCreate.cart.id;
           localStorage.setItem("cartId", storedCartId);
         } catch (err) {
@@ -46,7 +46,7 @@ export default function ProductDetails() {
   // click funcation
   const addToCart = async () => {
     const cartId = localStorage.getItem("cartId");
-    const response = await axios.post("http://localhost:3000/api/cart/add", {
+    const response = await axios.post("https://express-react-starter-052y.onrender.com/api/cart/add", {
       cartId,
       variantId: product.variants[0].id,  
       quantity: 1,
@@ -58,7 +58,7 @@ export default function ProductDetails() {
       const cartIdSc = localStorage.getItem("cartId");
       if (!cartIdSc) return;
       axios
-        .get(`http://localhost:3000/api/cart?cartId=${cartIdSc}`)
+        .get(`https://express-react-starter-052y.onrender.com/api/cart?cartId=${cartIdSc}`)
         .then((res) => {
           const cartData = res.data.data.cart;
           console.log("cartData product details", cartData);
@@ -97,7 +97,7 @@ export default function ProductDetails() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/api/product/${pid}`)
+      .get(`https://express-react-starter-052y.onrender.com/api/product/${pid}`)
       .then((res) => {
         setProduct(res.data.product);
       })
